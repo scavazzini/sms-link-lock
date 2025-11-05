@@ -5,12 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import dev.scavazzini.smslinklock.feature.chat.ChatScreen
+import dev.scavazzini.smslinklock.feature.chat.ChatScreenRoute
+import dev.scavazzini.smslinklock.feature.chat.ChatScreenViewModel
 import dev.scavazzini.smslinklock.ui.theme.SMSLinkLockTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,30 +20,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             SMSLinkLockTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                NavHost(
+                    navController = navController,
+                    startDestination = ChatScreenRoute("1"),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    composable<ChatScreenRoute> { backStackEntry ->
+                        val route: ChatScreenRoute = backStackEntry.toRoute()
+
+                        ChatScreen(
+                            viewModel = ChatScreenViewModel(
+                                conversationId = route.conversationId,
+                                application = application,
+                            ),
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SMSLinkLockTheme {
-        Greeting("Android")
     }
 }
