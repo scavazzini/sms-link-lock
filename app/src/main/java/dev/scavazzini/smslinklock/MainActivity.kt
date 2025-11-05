@@ -13,6 +13,9 @@ import androidx.navigation.toRoute
 import dev.scavazzini.smslinklock.feature.chat.ChatScreen
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenRoute
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenViewModel
+import dev.scavazzini.smslinklock.feature.inbox.InboxScreen
+import dev.scavazzini.smslinklock.feature.inbox.InboxScreenRoute
+import dev.scavazzini.smslinklock.feature.inbox.InboxScreenViewModel
 import dev.scavazzini.smslinklock.ui.theme.SMSLinkLockTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,9 +28,17 @@ class MainActivity : ComponentActivity() {
             SMSLinkLockTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = ChatScreenRoute("1"),
+                    startDestination = InboxScreenRoute,
                     modifier = Modifier.fillMaxSize(),
                 ) {
+                    composable<InboxScreenRoute> { backStackEntry ->
+                        InboxScreen(
+                            viewModel = InboxScreenViewModel(
+                                navController = navController,
+                                application = application,
+                            ),
+                        )
+                    }
                     composable<ChatScreenRoute> { backStackEntry ->
                         val route: ChatScreenRoute = backStackEntry.toRoute()
 
