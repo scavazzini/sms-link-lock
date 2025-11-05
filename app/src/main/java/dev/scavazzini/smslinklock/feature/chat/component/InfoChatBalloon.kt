@@ -21,17 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-data class InfoChatBalloonOption(
-    val text: String,
-    val onClick: () -> Unit,
-)
+import dev.scavazzini.smslinklock.InfoMessageOption
 
 @Composable
 internal fun InfoChatBalloon(
     text: String,
     modifier: Modifier = Modifier,
-    options: List<InfoChatBalloonOption> = emptyList(),
+    options: List<InfoMessageOption> = emptyList(),
 ) {
     Box(
         modifier = Modifier
@@ -91,8 +87,8 @@ private fun InfoChatBalloonWithOptionsPreview() {
     InfoChatBalloon(
         text = "Alice wants to start a secure chat with you",
         options = listOf(
-            InfoChatBalloonOption("Reject", {}),
-            InfoChatBalloonOption("Accept", {}),
+            InfoMessageOption("Reject", {}),
+            InfoMessageOption("Accept", {}),
         ),
     )
 }
@@ -104,8 +100,8 @@ private fun InfoChatBalloonLongTextPreview() {
     InfoChatBalloon(
         text = "Duis vel dolor tincidunt, dignissim turpis sed, semper metus. Praesent aliquam fringilla aliquet. Nullam consectetur lectus ut ipsum accumsan, et blandit augue posuere.",
         options = listOf(
-            InfoChatBalloonOption("Huh?", {}),
-            InfoChatBalloonOption("Understood", {}),
+            InfoMessageOption("Huh?", {}),
+            InfoMessageOption("Understood", {}),
         ),
     )
 }
