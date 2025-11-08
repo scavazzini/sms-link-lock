@@ -9,7 +9,7 @@ import android.provider.Telephony.TextBasedSmsColumns.READ
 import android.provider.Telephony.TextBasedSmsColumns.THREAD_ID
 
 class GetConversationsUseCase {
-    operator fun invoke(context: Context): Map<String, Conversation> {
+    operator fun invoke(context: Context): List<Conversation> {
         val projection = arrayOf(
             THREAD_ID,
             ADDRESS,
@@ -29,7 +29,7 @@ class GetConversationsUseCase {
 
         if (cursor == null || !cursor.moveToFirst()) {
             cursor?.close()
-            return emptyMap()
+            return emptyList()
         }
 
         val conversations = mutableMapOf<String, Conversation>()
@@ -66,12 +66,10 @@ class GetConversationsUseCase {
 
         cursor.close()
 
-        return conversations
-            .map {
-                it.key to it.value.copy(
-                    unreadCount = unreadCount.getOrDefault(it.value.id, 0),
-                )
-            }
-            .toMap()
+        return conversations.values.map { conversation ->
+            conversation.copy(
+                unreadCount = unreadCount.getOrDefault(conversation.id, 0),
+            )
+        }
     }
 }

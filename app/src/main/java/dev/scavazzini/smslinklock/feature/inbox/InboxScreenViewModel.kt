@@ -17,7 +17,7 @@ class InboxScreenViewModel(
     val conversations: StateFlow<List<Conversation>> = _conversations.asStateFlow()
 
     init {
-        _conversations.value = getConversationsUseCase(application).values.toList()
+        _conversations.value = getConversationsUseCase(application)
     }
 
     fun openChat(conversationId: String) {
