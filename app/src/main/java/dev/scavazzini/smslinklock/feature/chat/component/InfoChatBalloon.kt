@@ -32,13 +32,13 @@ internal fun InfoChatBalloon(
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .widthIn(max = 320.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
+                .widthIn(max = 320.dp)
                 .background(
                     color = Color.DarkGray,
                     shape = RoundedCornerShape(8.dp),
