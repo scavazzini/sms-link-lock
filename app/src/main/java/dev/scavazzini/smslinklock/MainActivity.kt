@@ -1,6 +1,7 @@
 package dev.scavazzini.smslinklock
 
 import android.os.Bundle
+import android.telephony.SmsManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import dev.scavazzini.smslinklock.feature.chat.ChatScreen
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenRoute
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenViewModel
 import dev.scavazzini.smslinklock.feature.chat.GetChatMessagesFromConversationUseCase
+import dev.scavazzini.smslinklock.feature.chat.SendSmsUseCase
 import dev.scavazzini.smslinklock.feature.inbox.GetConversationsUseCase
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreen
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreenRoute
@@ -51,6 +53,11 @@ class MainActivity : ComponentActivity() {
                                 conversationId = route.conversationId,
                                 getChatMessagesFromConversationUseCase = GetChatMessagesFromConversationUseCase(
                                     getSmsMessagesFromThreadUseCase = GetSmsMessagesFromThreadUseCase(),
+                                ),
+                                sendSmsUseCase = SendSmsUseCase(
+                                    smsManager = application.getSystemService(
+                                        /* serviceClass = */ SmsManager::class.java,
+                                    ),
                                 ),
                                 application = application,
                             ),

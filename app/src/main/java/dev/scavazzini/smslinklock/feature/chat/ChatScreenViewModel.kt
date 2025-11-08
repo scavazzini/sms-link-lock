@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 class ChatScreenViewModel(
     conversationId: String,
     getChatMessagesFromConversationUseCase: GetChatMessagesFromConversationUseCase,
-    application: Application,
+    private val sendSmsUseCase: SendSmsUseCase,
+    private val application: Application,
 ) : AndroidViewModel(application) {
     private val _messages: MutableStateFlow<List<ChatMessage>> = MutableStateFlow(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
@@ -31,6 +32,14 @@ class ChatScreenViewModel(
     }
 
     fun sendMessage() {
+        val message = _message.value
+        val address = _address.value
+
+        if (message.isBlank() || address == null || message.isBlank()) {
+            return
+        }
+
+        sendSmsUseCase(message, address, application)
         _message.value = ""
     }
 }
