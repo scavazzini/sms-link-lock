@@ -5,6 +5,7 @@ import android.provider.Telephony
 import android.provider.Telephony.TextBasedSmsColumns.ADDRESS
 import android.provider.Telephony.TextBasedSmsColumns.BODY
 import android.provider.Telephony.TextBasedSmsColumns.DATE
+import android.provider.Telephony.TextBasedSmsColumns.READ
 import android.provider.Telephony.TextBasedSmsColumns.THREAD_ID
 
 class GetConversationsUseCase {
@@ -13,6 +14,7 @@ class GetConversationsUseCase {
             THREAD_ID,
             ADDRESS,
             BODY,
+            READ,
         )
 
         val selection = "$THREAD_ID NOT NULL"
@@ -31,16 +33,18 @@ class GetConversationsUseCase {
         }
 
         val conversations = mutableMapOf<String, Conversation>()
-        val messageCount = mutableMapOf<String, Int>()
+        val unreadCount = mutableMapOf<String, Int>()
 
         do {
             val threadIdColumnIndex = cursor.getColumnIndex(THREAD_ID)
             val threadId = cursor.getString(threadIdColumnIndex)
 
-            messageCount.put(
-                key = threadId,
-                value = messageCount.getOrDefault(threadId, 0) + 1,
-            )
+            val readColumnIndex = cursor.getColumnIndex(READ)
+            val read = cursor.getInt(readColumnIndex)
+
+            if (read == 0) {
+                unreadCount.put(threadId, unreadCount.getOrDefault(threadId, 0) + 1)
+            }
 
             if (conversations.contains(threadId)) {
                 continue
@@ -53,7 +57,7 @@ class GetConversationsUseCase {
                 id = threadId,
                 address = cursor.getString(addressColumnIndex),
                 snippet = cursor.getString(bodyColumnIndex),
-                messageCount = 1,
+                unreadCount = 0,
             )
 
             conversations.put(threadId, conversation)
@@ -65,7 +69,7 @@ class GetConversationsUseCase {
         return conversations
             .map {
                 it.key to it.value.copy(
-                    messageCount = messageCount.getOrDefault(it.value.id, 0),
+                    unreadCount = unreadCount.getOrDefault(it.value.id, 0),
                 )
             }
             .toMap()

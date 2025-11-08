@@ -4,5 +4,5 @@ data class Conversation(
     val id: String,
     val address: String,
     val snippet: String,
-    val messageCount: Int,
+    val unreadCount: Int,
 )
