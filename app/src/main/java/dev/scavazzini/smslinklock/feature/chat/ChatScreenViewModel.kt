@@ -3,14 +3,18 @@ package dev.scavazzini.smslinklock.feature.chat
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import dev.scavazzini.smslinklock.ChatMessage
-import dev.scavazzini.smslinklock.InfoChatMessage
 import dev.scavazzini.smslinklock.TextChatMessage
+import dev.scavazzini.smslinklock.core.GetSmsMessagesFromThreadUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class ChatScreenViewModel(
     conversationId: String,
+    getSmsMessagesFromThreadUseCase: GetSmsMessagesFromThreadUseCase,
     application: Application,
 ) : AndroidViewModel(application) {
     private val _messages: MutableStateFlow<List<ChatMessage>> = MutableStateFlow(emptyList())
@@ -23,11 +27,17 @@ class ChatScreenViewModel(
     val message: StateFlow<String> = _message.asStateFlow()
 
     init {
-        _messages.value = listOf(
-            TextChatMessage("Bye", byYou = false, signed = true),
-            TextChatMessage("Hello", byYou = true, signed = true),
-            InfoChatMessage("Connection established", byYou = true, signed = true),
-        )
+        _messages.value = getSmsMessagesFromThreadUseCase(conversationId, application).map {
+            TextChatMessage(
+                message = it.body,
+                byYou = it.type == 2,
+                signed = true,
+                datetime = LocalDateTime.ofInstant(
+                    /* instant = */ Instant.ofEpochMilli(it.date),
+                    /* zone = */ ZoneId.systemDefault(),
+                ),
+            )
+        }
     }
 
     fun onMessageChange(newValue: String) {
