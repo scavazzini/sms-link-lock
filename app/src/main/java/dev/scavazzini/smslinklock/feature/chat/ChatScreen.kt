@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import dev.scavazzini.smslinklock.core.PersonPhoto
 import dev.scavazzini.smslinklock.feature.chat.component.ChatBalloon
 import kotlinx.serialization.Serializable
 
@@ -68,7 +70,15 @@ fun ChatScreen(
                         )
                     }
                 },
-                title = { Text(address) },
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        PersonPhoto(Modifier.size(40.dp))
+                        Text(address)
+                    }
+                },
             )
         },
         bottomBar = {
