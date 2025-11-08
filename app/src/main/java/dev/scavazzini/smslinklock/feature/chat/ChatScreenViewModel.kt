@@ -30,6 +30,7 @@ class ChatScreenViewModel(
         _messages.value = getSmsMessagesFromThreadUseCase(conversationId, application).map {
             TextChatMessage(
                 message = it.body,
+                address = it.address,
                 byYou = it.type == 2,
                 signed = true,
                 datetime = LocalDateTime.ofInstant(
@@ -38,6 +39,8 @@ class ChatScreenViewModel(
                 ),
             )
         }
+
+        _messages.value.firstOrNull()?.let { _address.value = it.address }
     }
 
     fun onMessageChange(newValue: String) {

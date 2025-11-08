@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 sealed interface ChatMessage {
     val message: String
+    val address: String
     val byYou: Boolean
     val signed: Boolean
     val datetime: LocalDateTime
@@ -11,6 +12,7 @@ sealed interface ChatMessage {
 
 data class TextChatMessage(
     override val message: String,
+    override val address: String,
     override val byYou: Boolean,
     override val signed: Boolean,
     override val datetime: LocalDateTime = LocalDateTime.now(),
@@ -18,6 +20,7 @@ data class TextChatMessage(
 
 data class InfoChatMessage(
     override val message: String,
+    override val address: String,
     override val byYou: Boolean,
     override val signed: Boolean,
     override val datetime: LocalDateTime = LocalDateTime.now(),
