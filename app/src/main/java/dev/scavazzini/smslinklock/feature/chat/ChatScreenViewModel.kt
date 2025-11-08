@@ -49,6 +49,10 @@ class ChatScreenViewModel(
     }
 
     private fun putMessage(chatMessage: ChatMessage) {
+        if (chatMessage.address != _address.value) {
+            return
+        }
+
         _messages.value = messages.value.toMutableList().apply {
             add(index = 0, element = chatMessage)
         }

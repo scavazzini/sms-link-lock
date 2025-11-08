@@ -3,6 +3,7 @@
 package dev.scavazzini.smslinklock.feature.chat
 
 import android.content.IntentFilter
+import android.provider.Telephony.Sms.Intents.SMS_RECEIVED_ACTION
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.registerReceiver
 import dev.scavazzini.smslinklock.core.PersonPhoto
+import dev.scavazzini.smslinklock.feature.chat.SendSmsUseCase.Companion.INTENT_SENT_ACTION
 import dev.scavazzini.smslinklock.feature.chat.component.ChatBalloon
 import kotlinx.serialization.Serializable
 
@@ -66,10 +68,15 @@ fun ChatScreen(
     val address by viewModel.address.collectAsState()
 
     DisposableEffect(viewModel.smsReceiver) {
+        val intentFilter = IntentFilter().apply {
+            addAction(SMS_RECEIVED_ACTION)
+            addAction(INTENT_SENT_ACTION)
+        }
+
         registerReceiver(
             /* context = */ context,
             /* receiver = */ viewModel.smsReceiver,
-            /* filter = */ IntentFilter(SendSmsUseCase.INTENT_SENT_ACTION),
+            /* filter = */ intentFilter,
             /* flags = */ ContextCompat.RECEIVER_EXPORTED,
         )
 
