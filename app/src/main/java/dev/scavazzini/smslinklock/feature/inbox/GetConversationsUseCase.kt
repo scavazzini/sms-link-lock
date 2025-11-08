@@ -2,9 +2,9 @@ package dev.scavazzini.smslinklock.feature.inbox
 
 import android.content.Context
 import android.provider.Telephony
+import android.provider.Telephony.Sms.DEFAULT_SORT_ORDER
 import android.provider.Telephony.TextBasedSmsColumns.ADDRESS
 import android.provider.Telephony.TextBasedSmsColumns.BODY
-import android.provider.Telephony.TextBasedSmsColumns.DATE
 import android.provider.Telephony.TextBasedSmsColumns.READ
 import android.provider.Telephony.TextBasedSmsColumns.THREAD_ID
 
@@ -24,7 +24,7 @@ class GetConversationsUseCase {
             /* projection = */ projection,
             /* selection = */ selection,
             /* selectionArgs = */ null,
-            /* sortOrder = */ "$THREAD_ID ASC, $DATE DESC",
+            /* sortOrder = */ DEFAULT_SORT_ORDER,
         )
 
         if (cursor == null || !cursor.moveToFirst()) {
