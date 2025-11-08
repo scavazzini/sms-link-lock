@@ -14,6 +14,7 @@ import dev.scavazzini.smslinklock.core.GetSmsMessagesFromThreadUseCase
 import dev.scavazzini.smslinklock.feature.chat.ChatScreen
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenRoute
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenViewModel
+import dev.scavazzini.smslinklock.feature.chat.GetChatMessagesFromConversationUseCase
 import dev.scavazzini.smslinklock.feature.inbox.GetConversationsUseCase
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreen
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreenRoute
@@ -48,7 +49,9 @@ class MainActivity : ComponentActivity() {
                         ChatScreen(
                             viewModel = ChatScreenViewModel(
                                 conversationId = route.conversationId,
-                                getSmsMessagesFromThreadUseCase = GetSmsMessagesFromThreadUseCase(),
+                                getChatMessagesFromConversationUseCase = GetChatMessagesFromConversationUseCase(
+                                    getSmsMessagesFromThreadUseCase = GetSmsMessagesFromThreadUseCase(),
+                                ),
                                 application = application,
                             ),
                             onBackClick = { navController.popBackStack() }
