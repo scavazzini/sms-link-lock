@@ -48,6 +48,7 @@ import androidx.core.content.ContextCompat.registerReceiver
 import dev.scavazzini.smslinklock.core.PersonPhoto
 import dev.scavazzini.smslinklock.feature.chat.SendSmsUseCase.Companion.INTENT_SENT_ACTION
 import dev.scavazzini.smslinklock.feature.chat.component.ChatBalloon
+import dev.scavazzini.smslinklock.ui.theme.calculateProfileColor
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -100,7 +101,10 @@ fun ChatScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        PersonPhoto(Modifier.size(40.dp))
+                        PersonPhoto(
+                            color = address?.calculateProfileColor() ?: Color.LightGray,
+                            modifier = Modifier.size(40.dp),
+                        )
                         Text(address ?: "Unknown")
                     }
                 },
