@@ -55,14 +55,7 @@ fun InboxScreen(
         }
     ) { contentPadding ->
         Column(modifier = modifier) {
-            LazyColumn(
-                contentPadding = PaddingValues(
-                    start = contentPadding.calculateStartPadding(LayoutDirection.Ltr) + 24.dp,
-                    top = contentPadding.calculateTopPadding() + 24.dp,
-                    end = contentPadding.calculateEndPadding(LayoutDirection.Ltr) + 24.dp,
-                    bottom = contentPadding.calculateBottomPadding() + 24.dp,
-                ),
-            ) {
+            LazyColumn(contentPadding = contentPadding) {
                 items(conversations) { conversation ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -70,16 +63,16 @@ fun InboxScreen(
                         modifier = Modifier
                             .clickable { viewModel.openChat(conversation.id) }
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp),
+                            .padding(16.dp),
                     ) {
-                        PersonPhoto()
+                        PersonPhoto(Modifier.size(56.dp))
                         Column(Modifier.weight(1f)) {
                             Text(conversation.address, fontWeight = FontWeight.Bold)
 
                             Text(
                                 text = conversation.snippet,
                                 overflow = TextOverflow.Ellipsis,
-                                maxLines = 2,
+                                maxLines = 1,
                             )
                         }
                         if (conversation.unreadCount > 0) {
