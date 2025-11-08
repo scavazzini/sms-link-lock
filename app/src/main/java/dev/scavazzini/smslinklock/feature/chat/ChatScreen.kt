@@ -76,7 +76,7 @@ fun ChatScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         PersonPhoto(Modifier.size(40.dp))
-                        Text(address)
+                        Text(address ?: "Unknown")
                     }
                 },
             )

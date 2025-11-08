@@ -15,8 +15,8 @@ class ChatScreenViewModel(
     private val _messages: MutableStateFlow<List<ChatMessage>> = MutableStateFlow(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
 
-    private val _address: MutableStateFlow<String> = MutableStateFlow("Unknown")
-    val address: StateFlow<String> = _address.asStateFlow()
+    private val _address: MutableStateFlow<String?> = MutableStateFlow(null)
+    val address: StateFlow<String?> = _address.asStateFlow()
 
     private val _message: MutableStateFlow<String> = MutableStateFlow("")
     val message: StateFlow<String> = _message.asStateFlow()
