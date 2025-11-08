@@ -6,6 +6,7 @@ import androidx.core.database.getStringOrNull
 
 data class SmsMessage(
     val threadId: String,
+    val type: Int,
     val address: String,
     val date: Long,
     val body: String,
@@ -17,6 +18,7 @@ class GetSmsMessagesUseCase {
     operator fun invoke(context: Context): Map<String, List<SmsMessage>> {
         val projection = arrayOf(
             Telephony.TextBasedSmsColumns.THREAD_ID,
+            Telephony.TextBasedSmsColumns.TYPE,
             Telephony.TextBasedSmsColumns.ADDRESS,
             Telephony.TextBasedSmsColumns.DATE,
             Telephony.TextBasedSmsColumns.BODY,
@@ -44,6 +46,8 @@ class GetSmsMessagesUseCase {
         do {
             val threadIdColumnIndex =
                 cursor.getColumnIndex(Telephony.TextBasedSmsColumns.THREAD_ID)
+            val typeColumnIndex =
+                cursor.getColumnIndex(Telephony.TextBasedSmsColumns.TYPE)
             val addressColumnIndex =
                 cursor.getColumnIndex(Telephony.TextBasedSmsColumns.ADDRESS)
             val dateColumnIndex =
@@ -57,6 +61,7 @@ class GetSmsMessagesUseCase {
 
             val smsMessage = SmsMessage(
                 threadId = cursor.getString(threadIdColumnIndex),
+                type = cursor.getInt(typeColumnIndex),
                 address = cursor.getString(addressColumnIndex),
                 date = cursor.getLong(dateColumnIndex),
                 body = cursor.getString(bodyColumnIndex),
