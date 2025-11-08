@@ -14,8 +14,8 @@ data class SmsMessage(
     val subject: String?,
 )
 
-class GetSmsMessagesUseCase {
-    operator fun invoke(context: Context): Map<String, List<SmsMessage>> {
+class GetSmsMessagesFromThreadUseCase {
+    operator fun invoke(threadId: String, context: Context): List<SmsMessage> {
         val projection = arrayOf(
             Telephony.TextBasedSmsColumns.THREAD_ID,
             Telephony.TextBasedSmsColumns.TYPE,
@@ -26,22 +26,22 @@ class GetSmsMessagesUseCase {
             Telephony.TextBasedSmsColumns.SUBJECT,
         )
 
-        val selection = "${Telephony.Sms.THREAD_ID} NOT NULL"
+        val selection = "${Telephony.Sms.THREAD_ID} = ?"
 
         val cursor = context.contentResolver.query(
             /* uri = */ Telephony.Sms.CONTENT_URI,
             /* projection = */ projection,
             /* selection = */ selection,
-            /* selectionArgs = */ null,
+            /* selectionArgs = */ arrayOf(threadId),
             /* sortOrder = */ Telephony.Sms.DEFAULT_SORT_ORDER,
         )
 
         if (cursor == null || !cursor.moveToFirst()) {
             cursor?.close()
-            return emptyMap()
+            return emptyList()
         }
 
-        val messages = mutableMapOf<String, MutableList<SmsMessage>>()
+        val messages = mutableListOf<SmsMessage>()
 
         do {
             val threadIdColumnIndex =
@@ -69,12 +69,7 @@ class GetSmsMessagesUseCase {
                 subject = cursor.getStringOrNull(subjectColumnIndex),
             )
 
-            val updatedMessages = messages.getOrDefault(
-                key = smsMessage.threadId,
-                defaultValue = mutableListOf(),
-            ).apply { add(0, smsMessage) }
-
-            messages.put(smsMessage.threadId, updatedMessages)
+            messages.add(smsMessage)
 
         } while (cursor.moveToNext())
 
