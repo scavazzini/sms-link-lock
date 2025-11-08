@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ChatScreenViewModel(
-    conversationId: String,
+    private val conversationId: String,
     getChatMessagesFromConversationUseCase: GetChatMessagesFromConversationUseCase,
     private val sendSmsUseCase: SendSmsUseCase,
     private val application: Application,
@@ -21,6 +21,11 @@ class ChatScreenViewModel(
 
     private val _message: MutableStateFlow<String> = MutableStateFlow("")
     val message: StateFlow<String> = _message.asStateFlow()
+
+    val smsReceiver = NewMessageBroadcastReceiver(
+        conversationId = conversationId,
+        onMessageReceived = this::putMessage,
+    )
 
     init {
         _messages.value = getChatMessagesFromConversationUseCase(conversationId, application)
@@ -39,7 +44,13 @@ class ChatScreenViewModel(
             return
         }
 
-        sendSmsUseCase(message, address, application)
+        sendSmsUseCase(message, address, conversationId, application)
         _message.value = ""
+    }
+
+    private fun putMessage(chatMessage: ChatMessage) {
+        _messages.value = messages.value.toMutableList().apply {
+            add(index = 0, element = chatMessage)
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 package dev.scavazzini.smslinklock.feature.chat
 
+import android.content.IntentFilter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,14 +32,18 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import dev.scavazzini.smslinklock.core.PersonPhoto
 import dev.scavazzini.smslinklock.feature.chat.component.ChatBalloon
 import kotlinx.serialization.Serializable
@@ -54,9 +59,22 @@ fun ChatScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     val message by viewModel.message.collectAsState("")
     val messages by viewModel.messages.collectAsState(emptyList())
     val address by viewModel.address.collectAsState()
+
+    DisposableEffect(viewModel.smsReceiver) {
+        registerReceiver(
+            /* context = */ context,
+            /* receiver = */ viewModel.smsReceiver,
+            /* filter = */ IntentFilter(SendSmsUseCase.INTENT_SENT_ACTION),
+            /* flags = */ ContextCompat.RECEIVER_EXPORTED,
+        )
+
+        onDispose { context.unregisterReceiver(viewModel.smsReceiver) }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),

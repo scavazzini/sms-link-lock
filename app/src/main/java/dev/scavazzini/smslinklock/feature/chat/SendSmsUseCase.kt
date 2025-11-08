@@ -11,14 +11,17 @@ class SendSmsUseCase(private val smsManager: SmsManager) {
     companion object {
         const val INTENT_SENT_ACTION = "SMS_SENT_ACTION"
         const val MESSAGE_EXTRA = "message"
+        const val ADDRESS_EXTRA = "address"
+        const val THREAD_ID_EXTRA = "thread_id"
     }
 
     operator fun invoke(
         message: String,
         address: String,
+        threadId: String,
         context: Context,
     ) {
-        val pendingIntent = createPendingIntent(message, context)
+        val pendingIntent = createPendingIntent(message, address, threadId, context)
         val messageFragments = smsManager.divideMessage(message)
 
         if (messageFragments.size <= 1) {
@@ -28,9 +31,16 @@ class SendSmsUseCase(private val smsManager: SmsManager) {
         return sendFragmentedSms(address, messageFragments, pendingIntent)
     }
 
-    private fun createPendingIntent(message: String, context: Context): PendingIntent {
+    private fun createPendingIntent(
+        message: String,
+        address: String,
+        threadId: String,
+        context: Context,
+    ): PendingIntent {
         val sentIntent = Intent(INTENT_SENT_ACTION).apply {
             putExtra(MESSAGE_EXTRA, message)
+            putExtra(ADDRESS_EXTRA, address)
+            putExtra(THREAD_ID_EXTRA, threadId)
         }
 
         return PendingIntent.getBroadcast(
