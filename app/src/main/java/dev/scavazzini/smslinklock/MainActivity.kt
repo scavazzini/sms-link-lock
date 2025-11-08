@@ -10,10 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import dev.scavazzini.smslinklock.core.GetSmsMessagesUseCase
 import dev.scavazzini.smslinklock.feature.chat.ChatScreen
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenRoute
 import dev.scavazzini.smslinklock.feature.chat.ChatScreenViewModel
+import dev.scavazzini.smslinklock.feature.inbox.GetConversationsUseCase
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreen
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreenRoute
 import dev.scavazzini.smslinklock.feature.inbox.InboxScreenViewModel
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         InboxScreen(
                             viewModel = InboxScreenViewModel(
                                 navController = navController,
-                                getSmsMessagesUseCase = GetSmsMessagesUseCase(),
+                                getConversationsUseCase = GetConversationsUseCase(),
                                 application = application,
                             ),
                         )
