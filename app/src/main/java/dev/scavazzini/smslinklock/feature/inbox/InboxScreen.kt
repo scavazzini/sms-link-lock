@@ -45,7 +45,7 @@ fun InboxScreen(
     val colors by remember(conversations) {
         mutableStateOf(
             conversations.associate { conversation ->
-                conversation.address to conversation.address.calculateProfileColor()
+                conversation.address to conversation.address.e164Format.calculateProfileColor()
             }
         )
     }
@@ -72,7 +72,7 @@ fun InboxScreen(
                             modifier = Modifier.size(56.dp),
                         )
                         Column(Modifier.weight(1f)) {
-                            Text(conversation.address, fontWeight = FontWeight.Bold)
+                            Text(conversation.address.internationalFormat, fontWeight = FontWeight.Bold)
 
                             Text(
                                 text = conversation.snippet,

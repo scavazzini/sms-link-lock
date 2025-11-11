@@ -3,6 +3,7 @@ package dev.scavazzini.smslinklock.feature.chat
 import android.content.Context
 import dev.scavazzini.smslinklock.ChatMessage
 import dev.scavazzini.smslinklock.TextChatMessage
+import dev.scavazzini.smslinklock.core.Address
 import dev.scavazzini.smslinklock.core.GetSmsMessagesFromThreadUseCase
 import java.time.Instant
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ class GetChatMessagesFromConversationUseCase(
         return smsMessages.map {
             return@map TextChatMessage(
                 message = it.body,
-                address = it.address,
+                address = Address(rawAddress = it.address),
                 byYou = it.type == 2,
                 signed = true,
                 datetime = LocalDateTime.ofInstant(

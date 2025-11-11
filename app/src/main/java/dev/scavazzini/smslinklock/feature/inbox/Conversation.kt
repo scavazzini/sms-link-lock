@@ -1,8 +1,10 @@
 package dev.scavazzini.smslinklock.feature.inbox
 
+import dev.scavazzini.smslinklock.core.Address
+
 data class Conversation(
     val id: String,
-    val address: String,
+    val address: Address,
     val snippet: String,
     val unreadCount: Int,
 )

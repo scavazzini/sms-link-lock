@@ -7,6 +7,7 @@ import android.provider.Telephony.TextBasedSmsColumns.ADDRESS
 import android.provider.Telephony.TextBasedSmsColumns.BODY
 import android.provider.Telephony.TextBasedSmsColumns.READ
 import android.provider.Telephony.TextBasedSmsColumns.THREAD_ID
+import dev.scavazzini.smslinklock.core.Address
 
 class GetConversationsUseCase {
     operator fun invoke(context: Context): List<Conversation> {
@@ -55,7 +56,7 @@ class GetConversationsUseCase {
 
             val conversation = Conversation(
                 id = threadId,
-                address = cursor.getString(addressColumnIndex),
+                address = Address(cursor.getString(addressColumnIndex)),
                 snippet = cursor.getString(bodyColumnIndex),
                 unreadCount = 0,
             )
