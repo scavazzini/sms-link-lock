@@ -3,6 +3,7 @@ package dev.scavazzini.smslinklock.feature.chat
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import dev.scavazzini.smslinklock.ChatMessage
+import dev.scavazzini.smslinklock.core.Address
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +17,8 @@ class ChatScreenViewModel(
     private val _messages: MutableStateFlow<List<ChatMessage>> = MutableStateFlow(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
 
-    private val _address: MutableStateFlow<String?> = MutableStateFlow(null)
-    val address: StateFlow<String?> = _address.asStateFlow()
+    private val _address: MutableStateFlow<Address?> = MutableStateFlow(null)
+    val address: StateFlow<Address?> = _address.asStateFlow()
 
     private val _message: MutableStateFlow<String> = MutableStateFlow("")
     val message: StateFlow<String> = _message.asStateFlow()
@@ -44,7 +45,7 @@ class ChatScreenViewModel(
             return
         }
 
-        sendSmsUseCase(message, address, conversationId, application)
+        sendSmsUseCase(message, address.e164Format, conversationId, application)
         _message.value = ""
     }
 

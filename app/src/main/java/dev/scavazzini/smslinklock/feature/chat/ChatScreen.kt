@@ -102,10 +102,10 @@ fun ChatScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         PersonPhoto(
-                            color = address?.calculateProfileColor() ?: Color.LightGray,
+                            color = address?.e164Format?.calculateProfileColor() ?: Color.LightGray,
                             modifier = Modifier.size(40.dp),
                         )
-                        Text(address ?: "Unknown")
+                        Text(address?.internationalFormat ?: "Unknown")
                     }
                 },
             )

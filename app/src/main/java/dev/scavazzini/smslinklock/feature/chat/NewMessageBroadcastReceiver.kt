@@ -7,6 +7,7 @@ import android.provider.Telephony
 import android.provider.Telephony.Sms.Intents.getMessagesFromIntent
 import dev.scavazzini.smslinklock.ChatMessage
 import dev.scavazzini.smslinklock.TextChatMessage
+import dev.scavazzini.smslinklock.core.Address
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -25,10 +26,16 @@ class NewMessageBroadcastReceiver(
 
     private fun smsReceived(intent: Intent) {
         for (message in getMessagesFromIntent(intent)) {
+            val rawAddress = message.originatingAddress
+
+            if (rawAddress == null) {
+                continue
+            }
+
             onMessageReceived(
                 TextChatMessage(
                     message = message.messageBody,
-                    address = message.originatingAddress ?: "Unknown",
+                    address = Address(rawAddress),
                     byYou = false,
                     signed = true,
                     datetime = LocalDateTime.ofInstant(
@@ -51,7 +58,7 @@ class NewMessageBroadcastReceiver(
         onMessageReceived(
             TextChatMessage(
                 message = message,
-                address = address,
+                address = Address(address),
                 byYou = true,
                 signed = true,
                 datetime = LocalDateTime.now(),
