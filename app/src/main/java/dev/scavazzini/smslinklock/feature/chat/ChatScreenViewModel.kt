@@ -50,7 +50,9 @@ class ChatScreenViewModel(
     }
 
     private fun putMessage(chatMessage: ChatMessage) {
-        if (chatMessage.address != _address.value) {
+        val conversationAddress = _address.value ?: return
+
+        if (!chatMessage.address.isEqualTo(conversationAddress)) {
             return
         }
 

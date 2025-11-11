@@ -26,4 +26,11 @@ class Address(
             /* numberFormat = */ format,
         )
     }
+
+    fun isEqualTo(anotherAddress: Address): Boolean {
+        return phoneNumberUtil.isNumberMatch(
+            /* firstNumber = */ this.e164Format,
+            /* secondNumber = */ anotherAddress.e164Format,
+        ) != PhoneNumberUtil.MatchType.NO_MATCH
+    }
 }
