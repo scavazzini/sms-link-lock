@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.scavazzini.smslinklock.core.PersonPhoto
+import dev.scavazzini.smslinklock.core.format
 import dev.scavazzini.smslinklock.ui.theme.calculateProfileColor
 import kotlinx.serialization.Serializable
 
@@ -80,17 +81,26 @@ fun InboxScreen(
                                 maxLines = 1,
                             )
                         }
-                        if (conversation.unreadCount > 0) {
+                        Column(
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            if (conversation.unreadCount > 0) {
+                                Text(
+                                    text = conversation.unreadCount.toString(),
+                                    modifier = Modifier
+                                        .background(
+                                            color = Color.LightGray,
+                                            shape = RoundedCornerShape(50),
+                                        )
+                                        .padding(horizontal = 8.dp),
+                                )
+                            }
                             Text(
-                                text = conversation.unreadCount.toString(),
-                                modifier = Modifier
-                                    .background(
-                                        color = Color.LightGray,
-                                        shape = RoundedCornerShape(50),
-                                    )
-                                    .padding(horizontal = 8.dp),
+                                text = conversation.lastMessageDate.format(),
                             )
                         }
+
                     }
                 }
             }

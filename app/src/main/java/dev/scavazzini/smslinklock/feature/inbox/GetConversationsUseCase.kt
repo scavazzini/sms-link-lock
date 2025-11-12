@@ -5,9 +5,13 @@ import android.provider.Telephony
 import android.provider.Telephony.Sms.DEFAULT_SORT_ORDER
 import android.provider.Telephony.TextBasedSmsColumns.ADDRESS
 import android.provider.Telephony.TextBasedSmsColumns.BODY
+import android.provider.Telephony.TextBasedSmsColumns.DATE
 import android.provider.Telephony.TextBasedSmsColumns.READ
 import android.provider.Telephony.TextBasedSmsColumns.THREAD_ID
 import dev.scavazzini.smslinklock.core.Address
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class GetConversationsUseCase {
     operator fun invoke(context: Context): List<Conversation> {
@@ -16,6 +20,7 @@ class GetConversationsUseCase {
             ADDRESS,
             BODY,
             READ,
+            DATE,
         )
 
         val selection = "$THREAD_ID NOT NULL"
@@ -53,12 +58,17 @@ class GetConversationsUseCase {
 
             val addressColumnIndex = cursor.getColumnIndex(ADDRESS)
             val bodyColumnIndex = cursor.getColumnIndex(BODY)
+            val dateColumnIndex = cursor.getColumnIndex(DATE)
 
             val conversation = Conversation(
                 id = threadId,
                 address = Address(cursor.getString(addressColumnIndex)),
                 snippet = cursor.getString(bodyColumnIndex),
                 unreadCount = 0,
+                lastMessageDate = LocalDateTime.ofInstant(
+                    /* instant = */ Instant.ofEpochMilli(cursor.getLong(dateColumnIndex)),
+                    /* zone = */ ZoneId.systemDefault(),
+                ),
             )
 
             conversations.put(threadId, conversation)

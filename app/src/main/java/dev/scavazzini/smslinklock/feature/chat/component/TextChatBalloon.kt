@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.scavazzini.smslinklock.core.format
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -135,17 +136,6 @@ private fun defaultShape(sentByYou: Boolean): RoundedCornerShape {
         bottomEnd = largerRadius,
         bottomStart = smallerRadius,
     )
-}
-
-private fun LocalDateTime.format(): String {
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-    val fullDateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-
-    if (LocalDateTime.now().minusDays(1).isBefore(this)) {
-        return timeFormatter.format(this)
-    }
-
-    return fullDateTimeFormatter.format(this)
 }
 
 @Preview
