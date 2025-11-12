@@ -23,10 +23,7 @@ class ChatScreenViewModel(
     private val _message: MutableStateFlow<String> = MutableStateFlow("")
     val message: StateFlow<String> = _message.asStateFlow()
 
-    val smsReceiver = NewMessageBroadcastReceiver(
-        conversationId = conversationId,
-        onMessageReceived = this::putMessage,
-    )
+    val smsReceiver = NewMessageBroadcastReceiver(onMessageReceived = this::putMessage)
 
     init {
         _messages.value = getChatMessagesFromConversationUseCase(conversationId, application)

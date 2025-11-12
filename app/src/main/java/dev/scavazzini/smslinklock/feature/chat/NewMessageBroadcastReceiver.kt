@@ -13,7 +13,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class NewMessageBroadcastReceiver(
-    private val conversationId: String,
     private val onMessageReceived: (chatMessage: ChatMessage) -> Unit,
 ) : BroadcastReceiver() {
 
@@ -48,10 +47,6 @@ class NewMessageBroadcastReceiver(
     }
 
     private fun sentSmsReceived(intent: Intent) {
-        if (intent.isMessageFromAnotherConversation()) {
-            return
-        }
-
         val message = intent.extras?.getString(SendSmsUseCase.MESSAGE_EXTRA) ?: return
         val address = intent.extras?.getString(SendSmsUseCase.ADDRESS_EXTRA) ?: return
 
@@ -66,7 +61,4 @@ class NewMessageBroadcastReceiver(
         )
     }
 
-    private fun Intent.isMessageFromAnotherConversation(): Boolean {
-        return extras?.getString(SendSmsUseCase.THREAD_ID_EXTRA) != conversationId
-    }
 }
