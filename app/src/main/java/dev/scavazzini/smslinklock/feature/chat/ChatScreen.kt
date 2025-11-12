@@ -68,6 +68,8 @@ fun ChatScreen(
     val messages by viewModel.messages.collectAsState(emptyList())
     val address by viewModel.address.collectAsState()
 
+    val backgroundColor = Color(0xFFE8E8E8)
+
     DisposableEffect(viewModel.smsReceiver) {
         val intentFilter = IntentFilter().apply {
             addAction(SMS_RECEIVED_ACTION)
@@ -111,7 +113,7 @@ fun ChatScreen(
             )
         },
         bottomBar = {
-            Column {
+            Column(Modifier.background(backgroundColor)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 24.dp)
@@ -157,7 +159,7 @@ fun ChatScreen(
         },
     ) { contentPadding ->
         Column(
-            Modifier.background(Color(0xffe8e8e8))
+            Modifier.background(backgroundColor),
         ) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
