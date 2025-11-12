@@ -2,6 +2,8 @@
 
 package dev.scavazzini.smslinklock.feature.inbox
 
+import android.content.IntentFilter
+import android.provider.Telephony.Sms.Intents.SMS_RECEIVED_ACTION
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,11 +29,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import dev.scavazzini.smslinklock.core.PersonPhoto
 import dev.scavazzini.smslinklock.core.format
+import dev.scavazzini.smslinklock.feature.chat.SendSmsUseCase.Companion.INTENT_SENT_ACTION
 import dev.scavazzini.smslinklock.ui.theme.calculateProfileColor
 import kotlinx.serialization.Serializable
 
@@ -42,6 +49,8 @@ fun InboxScreen(
     viewModel: InboxScreenViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     val conversations by viewModel.conversations.collectAsState(initial = emptyList())
     val colors by remember(conversations) {
         mutableStateOf(
@@ -49,6 +58,22 @@ fun InboxScreen(
                 conversation.address to conversation.address.e164Format.calculateProfileColor()
             }
         )
+    }
+
+    DisposableEffect(viewModel.smsReceiver) {
+        val intentFilter = IntentFilter().apply {
+            addAction(SMS_RECEIVED_ACTION)
+            addAction(INTENT_SENT_ACTION)
+        }
+
+        registerReceiver(
+            /* context = */ context,
+            /* receiver = */ viewModel.smsReceiver,
+            /* filter = */ intentFilter,
+            /* flags = */ ContextCompat.RECEIVER_EXPORTED,
+        )
+
+        onDispose { context.unregisterReceiver(viewModel.smsReceiver) }
     }
 
     Scaffold(
