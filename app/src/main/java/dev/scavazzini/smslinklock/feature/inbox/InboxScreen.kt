@@ -84,11 +84,15 @@ fun InboxScreen(
     ) { contentPadding ->
         Column(modifier = modifier) {
             LazyColumn(contentPadding = contentPadding) {
-                items(conversations) { conversation ->
+                items(
+                    items = conversations,
+                    key = { it.id },
+                ) { conversation ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
+                            .animateItem()
                             .clickable { viewModel.openChat(conversation.id) }
                             .fillMaxWidth()
                             .padding(16.dp),
