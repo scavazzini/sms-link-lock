@@ -21,8 +21,9 @@ class InboxScreenViewModel(
     private val _conversations: MutableStateFlow<Map<String, Conversation>> =
         MutableStateFlow(emptyMap())
 
-    val conversations: StateFlow<List<Conversation>> = _conversations.map { it.values.toList() }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val conversations: StateFlow<List<Conversation>> = _conversations.map {
+        it.values.toList().sortedByDescending { it.lastMessageDate }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val smsReceiver = NewMessageBroadcastReceiver(onMessageReceived = this::updateConversation)
 
